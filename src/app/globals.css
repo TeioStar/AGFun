@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0f0f23;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #222244;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: #2d2d44;
+  --bilibili: #fb7299;
+  --steam: #66c0f4;
+  --deal: #10b981;
+  --glow-bilibili: rgba(251, 114, 153, 0.15);
+  --glow-steam: rgba(102, 192, 244, 0.15);
+  --glow-deal: rgba(16, 185, 129, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* card hover glow */
+.card-glow {
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.card-glow:hover {
+  transform: translateY(-2px);
+}
+.card-glow[data-type="bilibili"]:hover {
+  box-shadow: 0 8px 32px var(--glow-bilibili), 0 0 0 1px var(--bilibili);
+}
+.card-glow[data-type="steam"]:hover {
+  box-shadow: 0 8px 32px var(--glow-steam), 0 0 0 1px var(--steam);
+}
+.card-glow[data-type="deal"]:hover {
+  box-shadow: 0 8px 32px var(--glow-deal), 0 0 0 1px var(--deal);
+}
+
+/* badge pulse */
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+.badge-pulse { animation: badge-pulse 2s ease-in-out infinite; }
+
+/* skeleton loading */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
