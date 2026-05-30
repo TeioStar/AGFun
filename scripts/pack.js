@@ -78,15 +78,20 @@ fs.writeFileSync(path.join(releaseDir, 'VERSION.txt'), `AGFun v${pkg.version}
 const size = getDirSize(releaseDir);
 console.log(`✅ 打包完成: release/${releaseName}/ (${formatSize(size)})`);
 
-// 压缩为 zip（如果有 tar/zip 命令）
+// 压缩为 zip
 try {
   const zipFile = path.join(ROOT, 'release', `${releaseName}.zip`);
-  const relPath = path.relative(ROOT, releaseDir);
-  execSync(`powershell -Command "Compress-Archive -Path '${releaseDir}' -DestinationPath '${zipFile}' -Force"`, { stdio: 'pipe' });
+  if (process.platform === 'win32') {
+    execSync(`powershell -Command "Compress-Archive -Path '${releaseDir}' -DestinationPath '${zipFile}' -Force"`, { stdio: 'pipe' });
+  } else {
+    // Linux / macOS: 使用 zip 命令
+    execSync(`cd "${path.join(ROOT, 'release')}" && zip -r "${releaseName}.zip" "${releaseName}"`, { stdio: 'pipe' });
+  }
   const zipSize = fs.statSync(zipFile).size;
   console.log(`📦 压缩包: release/${releaseName}.zip (${formatSize(zipSize)})`);
 } catch (e) {
-  console.log('⚠️  未找到压缩工具，跳过压缩。手动压缩 release/ 目录即可。');
+  console.log('⚠️  压缩失败，手动压缩 release/ 目录即可。');
+  console.log(e.message);
 }
 
 // === 工具函数 ===
