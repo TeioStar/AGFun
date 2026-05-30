@@ -5,6 +5,7 @@ import { Tv, Bell, Clock, Play, ExternalLink } from 'lucide-react';
 import { getDemoBangumiUpdates } from '@/lib/bilibili';
 import type { BangumiUpdate } from '@/types';
 import { timeAgo } from '@/lib/utils';
+import FilterBtn from '@/components/ui/FilterBtn';
 
 export default function BangumiPage() {
   const [updates, setUpdates] = useState<BangumiUpdate[]>([]);
@@ -34,8 +35,8 @@ export default function BangumiPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <FilterBtn active={filter === 'all'} onClick={() => setFilter('all')}>全部</FilterBtn>
-          <FilterBtn active={filter === 'new'} onClick={() => setFilter('new')}>
+          <FilterBtn active={filter === 'all'} onClick={() => setFilter('all')} color="bilibili">全部</FilterBtn>
+          <FilterBtn active={filter === 'new'} onClick={() => setFilter('new')} color="bilibili">
             <Bell size={12} /> 有更新
           </FilterBtn>
         </div>
@@ -102,17 +103,3 @@ export default function BangumiPage() {
   );
 }
 
-function FilterBtn({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-        active
-          ? 'bg-bilibili/15 text-bilibili'
-          : 'bg-white/5 text-[var(--text-muted)] hover:bg-white/10'
-      }`}
-    >
-      {children}
-    </button>
-  );
-}

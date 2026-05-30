@@ -12,6 +12,8 @@ import { getDemoNewReleases } from '@/lib/steam';
 import { getDemoPriceAlerts } from '@/lib/itad';
 import type { BangumiUpdate, SteamNewRelease, GamePriceAlert } from '@/types';
 import { timeAgo, formatPrice } from '@/lib/utils';
+import StatusBadge from '@/components/ui/StatusBadge';
+import SectionCard from '@/components/ui/SectionCard';
 
 export default function DashboardPage() {
   const [bangumi, setBangumi] = useState<BangumiUpdate[]>([]);
@@ -158,60 +160,3 @@ export default function DashboardPage() {
   );
 }
 
-/* ---- 子组件 ---- */
-
-function StatusBadge({ icon, label, color, pulse }: {
-  icon: React.ReactNode;
-  label: string;
-  color: string;
-  pulse?: boolean;
-}) {
-  return (
-    <span className={`
-      inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium
-      bg-${color}/15 text-${color} ${pulse ? 'badge-pulse' : ''}
-    `}
-    style={{ backgroundColor: `color-mix(in srgb, var(--${color}) 15%, transparent)`, color: `var(--${color})` }}
-    >
-      {icon}
-      {label}
-    </span>
-  );
-}
-
-function SectionCard({ href, title, icon, color, loading, count, children }: {
-  href: string;
-  title: string;
-  icon: React.ReactNode;
-  color: string;
-  loading: boolean;
-  count: number;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className={`card-glow rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-5 transition-all`}
-         data-type={color === 'bilibili' ? 'bilibili' : color === 'steam' ? 'steam' : 'deal'}>
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {icon}
-          <h2 className="text-base font-semibold">{title}</h2>
-          <span className="rounded-full bg-white/5 px-2 py-0.5 text-xs text-[var(--text-muted)]">
-            {loading ? '...' : count}
-          </span>
-        </div>
-        <Link href={href}
-              className="flex items-center gap-1 text-xs text-[var(--text-muted)] transition-colors hover:text-[var(--text)]">
-          查看全部 <ArrowRight size={12} />
-        </Link>
-      </div>
-      <div className="space-y-2">
-        {loading
-          ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="skeleton h-[60px] w-full" />
-            ))
-          : children
-        }
-      </div>
-    </div>
-  );
-}

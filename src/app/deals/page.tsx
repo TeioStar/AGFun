@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { TrendingDown, Star, Filter, ExternalLink, AlertTriangle, ArrowDown, Store } from 'lucide-react';
 import { getDemoPriceAlerts } from '@/lib/itad';
 import type { GamePriceAlert } from '@/types';
+import FilterBtn from '@/components/ui/FilterBtn';
 
 export default function DealsPage() {
   const [deals, setDeals] = useState<GamePriceAlert[]>([]);
@@ -37,11 +38,11 @@ export default function DealsPage() {
           </div>
         </div>
         <div className="flex gap-2">
-          <FilterBtn active={filter === 'all'} onClick={() => setFilter('all')}>全部</FilterBtn>
-          <FilterBtn active={filter === 'atLow'} onClick={() => setFilter('atLow')}>
+          <FilterBtn active={filter === 'all'} onClick={() => setFilter('all')} color="deal">全部</FilterBtn>
+          <FilterBtn active={filter === 'atLow'} onClick={() => setFilter('atLow')} color="deal">
             <Star size={11} /> 史低
           </FilterBtn>
-          <FilterBtn active={filter === 'bigDiscount'} onClick={() => setFilter('bigDiscount')}>
+          <FilterBtn active={filter === 'bigDiscount'} onClick={() => setFilter('bigDiscount')} color="deal">
             <ArrowDown size={11} /> 五折以下
           </FilterBtn>
         </div>
@@ -136,15 +137,3 @@ export default function DealsPage() {
   );
 }
 
-function FilterBtn({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-        active ? 'bg-deal/15 text-deal' : 'bg-white/5 text-[var(--text-muted)] hover:bg-white/10'
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
