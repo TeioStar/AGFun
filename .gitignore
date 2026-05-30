@@ -50,6 +50,7 @@ Thumbs.db
 .playwright-mcp/
 *.playwright-mcp/
 agfun-*.png
+release/
 
 # memory
 .claude/memory/
