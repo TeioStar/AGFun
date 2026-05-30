@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Tv, Gamepad2, TrendingDown, Settings, Sparkles } from 'lucide-react';
+import { Tv, Gamepad2, TrendingDown, Settings, Sparkles, Sun, Moon } from 'lucide-react';
+import { useTheme } from '@/components/theme/ThemeProvider';
 
 const navItems = [
   { href: '/',           label: '总览', icon: Sparkles },
@@ -15,6 +16,7 @@ const navItems = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { theme, toggle } = useTheme();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[var(--border)] bg-[var(--bg)]/80 backdrop-blur-xl">
@@ -49,8 +51,17 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Mobile bottom nav is rendered separately */}
-      </div>
-    </nav>
-  );
+        {/* Theme toggle - desktop */}
+          <button
+            onClick={toggle}
+            className="ml-2 hidden md:flex h-9 w-9 items-center justify-center rounded-lg text-[var(--text-muted)] transition-colors hover:bg-white/10 hover:text-[var(--text)]"
+            title={theme === 'dark' ? '切换亮色主题' : '切换暗色主题'}
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
+          {/* Mobile bottom nav is rendered separately */}
+        </div>
+      </nav>
+    );
 }

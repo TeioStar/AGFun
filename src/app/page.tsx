@@ -1,37 +1,17 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import {
-  Tv, Gamepad2, TrendingDown, ArrowRight, Bell, Clock, Flame, Star
-} from 'lucide-react';
-import {
-  getDemoBangumiUpdates
-} from '@/lib/bilibili';
+import { Tv, Gamepad2, TrendingDown, Bell, Star } from 'lucide-react';
+import { getDemoBangumiUpdates } from '@/lib/bilibili';
 import { getDemoNewReleases } from '@/lib/steam';
 import { getDemoPriceAlerts } from '@/lib/itad';
-import type { BangumiUpdate, SteamNewRelease, GamePriceAlert } from '@/types';
-import { timeAgo, formatPrice } from '@/lib/utils';
+import { timeAgo } from '@/lib/utils';
 import StatusBadge from '@/components/ui/StatusBadge';
 import SectionCard from '@/components/ui/SectionCard';
 
 export default function DashboardPage() {
-  const [bangumi, setBangumi] = useState<BangumiUpdate[]>([]);
-  const [games, setGames]       = useState<SteamNewRelease[]>([]);
-  const [deals, setDeals]       = useState<GamePriceAlert[]>([]);
-  const [loading, setLoading]   = useState(true);
+  const bangumi = getDemoBangumiUpdates();
+  const games   = getDemoNewReleases();
+  const deals   = getDemoPriceAlerts();
 
-  useEffect(() => {
-    // 初始化加载演示数据
-    setTimeout(() => {
-      setBangumi(getDemoBangumiUpdates());
-      setGames(getDemoNewReleases());
-      setDeals(getDemoPriceAlerts());
-      setLoading(false);
-    }, 600);
-  }, []);
-
-  const newCount = bangumi.filter(b => b.is_new).length;
+  const newCount  = bangumi.filter(b => b.is_new).length;
   const dealCount = deals.filter(d => d.is_at_low).length;
 
   return (
@@ -70,7 +50,7 @@ export default function DashboardPage() {
           title="追番更新"
           icon={<Tv size={18} className="text-bilibili" />}
           color="bilibili"
-          loading={loading}
+          loading={false}
           count={bangumi.length}
         >
           {bangumi.slice(0, 4).map(b => (
@@ -99,7 +79,7 @@ export default function DashboardPage() {
           title="新游发布"
           icon={<Gamepad2 size={18} className="text-steam" />}
           color="steam"
-          loading={loading}
+          loading={false}
           count={games.length}
         >
           {games.slice(0, 4).map(g => (
@@ -129,7 +109,7 @@ export default function DashboardPage() {
           title="Steam 史低"
           icon={<TrendingDown size={18} className="text-deal" />}
           color="deal"
-          loading={loading}
+          loading={false}
           count={deals.length}
         >
           {deals.slice(0, 4).map((d, i) => (
@@ -159,4 +139,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

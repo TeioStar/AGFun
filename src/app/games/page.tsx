@@ -1,22 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Gamepad2, Tag, Search, TrendingUp } from 'lucide-react';
-import { getDemoNewReleases } from '@/lib/steam';
+import { useState } from 'react';
+import { Gamepad2, Search } from 'lucide-react';
 import type { SteamNewRelease } from '@/types';
+import { useNewReleases } from '@/hooks/useData';
 
 export default function GamesPage() {
-  const [games, setGames] = useState<SteamNewRelease[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: games = [], isLoading } = useNewReleases();
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<'default' | 'discount' | 'name'>('default');
-
-  useEffect(() => {
-    setTimeout(() => {
-      setGames(getDemoNewReleases());
-      setLoading(false);
-    }, 500);
-  }, []);
 
   let filtered = games.filter(g =>
     g.name.toLowerCase().includes(search.toLowerCase())
@@ -42,7 +34,6 @@ export default function GamesPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {/* Search */}
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
             <input
@@ -53,7 +44,6 @@ export default function GamesPage() {
               className="h-9 w-full rounded-lg border border-[var(--border)] bg-white/5 pl-8 pr-3 text-xs text-[var(--text)] placeholder:text-[var(--text-muted)] outline-none transition-colors focus:border-steam/50 sm:w-48"
             />
           </div>
-          {/* Sort */}
           <select
             value={sort}
             onChange={e => setSort(e.target.value as typeof sort)}
@@ -68,7 +58,7 @@ export default function GamesPage() {
 
       {/* Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {loading
+        {isLoading
           ? Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="skeleton h-64 w-full rounded-2xl" />
             ))
@@ -76,7 +66,6 @@ export default function GamesPage() {
               <div key={game.appid}
                    className="card-glow group overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] transition-all"
                    data-type="steam">
-                {/* 图片 */}
                 <div className="relative aspect-video overflow-hidden bg-steam/5">
                   {game.header_image ? (
                     <img src={game.header_image} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
@@ -91,7 +80,6 @@ export default function GamesPage() {
                     </div>
                   ) : null}
                 </div>
-                {/* Info */}
                 <div className="p-3">
                   <h3 className="truncate text-sm font-semibold leading-tight">{game.name}</h3>
                   <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -114,7 +102,7 @@ export default function GamesPage() {
             ))}
       </div>
 
-      {!loading && filtered.length === 0 && (
+      {!isLoading && filtered.length === 0 && (
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-12 text-center">
           <Gamepad2 size={48} className="mx-auto text-steam/20" />
           <p className="mt-3 text-sm text-[var(--text-muted)]">未找到匹配的游戏</p>

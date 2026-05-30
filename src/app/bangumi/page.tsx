@@ -1,23 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Tv, Bell, Clock, Play, ExternalLink } from 'lucide-react';
-import { getDemoBangumiUpdates } from '@/lib/bilibili';
+import { useState } from 'react';
+import { Tv, Bell, Clock, Play } from 'lucide-react';
 import type { BangumiUpdate } from '@/types';
 import { timeAgo } from '@/lib/utils';
+import { useBangumiUpdates } from '@/hooks/useData';
 import FilterBtn from '@/components/ui/FilterBtn';
 
 export default function BangumiPage() {
-  const [updates, setUpdates] = useState<BangumiUpdate[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: updates = [], isLoading } = useBangumiUpdates();
   const [filter, setFilter] = useState<'all' | 'new'>('all');
-
-  useEffect(() => {
-    setTimeout(() => {
-      setUpdates(getDemoBangumiUpdates());
-      setLoading(false);
-    }, 500);
-  }, []);
 
   const filtered = filter === 'new' ? updates.filter(u => u.is_new) : updates;
 
@@ -44,7 +36,7 @@ export default function BangumiPage() {
 
       {/* 列表 */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {loading
+        {isLoading
           ? Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="skeleton h-48 w-full rounded-2xl" />
             ))
@@ -52,7 +44,6 @@ export default function BangumiPage() {
               <div key={b.season_id}
                    className="card-glow group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] transition-all"
                    data-type="bilibili">
-                {/* 封面 */}
                 <div className="relative h-32 overflow-hidden bg-bilibili/5">
                   {b.cover ? (
                     <img src={b.cover} alt="" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
@@ -66,10 +57,8 @@ export default function BangumiPage() {
                       <Play size={10} fill="white" /> NEW
                     </div>
                   )}
-                  {/* 渐变遮罩 */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-card)] via-transparent to-transparent" />
                 </div>
-                {/* 信息 */}
                 <div className="p-4 pt-0">
                   <h3 className="mt-1 truncate text-sm font-semibold">{b.season_title}</h3>
                   <div className="mt-2 flex items-center gap-2 text-xs text-[var(--text-muted)]">
@@ -91,7 +80,7 @@ export default function BangumiPage() {
             ))}
       </div>
 
-      {!loading && filtered.length === 0 && (
+      {!isLoading && filtered.length === 0 && (
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-12 text-center">
           <Tv size={48} className="mx-auto text-bilibili/20" />
           <p className="mt-3 text-sm text-[var(--text-muted)]">
@@ -102,4 +91,3 @@ export default function BangumiPage() {
     </div>
   );
 }
-

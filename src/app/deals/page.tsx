@@ -1,22 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { TrendingDown, Star, Filter, ExternalLink, AlertTriangle, ArrowDown, Store } from 'lucide-react';
-import { getDemoPriceAlerts } from '@/lib/itad';
+import { useState } from 'react';
+import { TrendingDown, Star, AlertTriangle, ArrowDown, Store } from 'lucide-react';
 import type { GamePriceAlert } from '@/types';
+import { usePriceAlerts } from '@/hooks/useData';
 import FilterBtn from '@/components/ui/FilterBtn';
 
 export default function DealsPage() {
-  const [deals, setDeals] = useState<GamePriceAlert[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: deals = [], isLoading } = usePriceAlerts();
   const [filter, setFilter] = useState<'all' | 'atLow' | 'bigDiscount'>('all');
-
-  useEffect(() => {
-    setTimeout(() => {
-      setDeals(getDemoPriceAlerts());
-      setLoading(false);
-    }, 500);
-  }, []);
 
   const filtered = deals.filter(d => {
     if (filter === 'atLow') return d.is_at_low;
@@ -73,7 +65,7 @@ export default function DealsPage() {
               </tr>
             </thead>
             <tbody>
-              {loading
+              {isLoading
                 ? Array.from({ length: 5 }).map((_, i) => (
                     <tr key={i} className="border-b border-[var(--border)]">
                       <td colSpan={6} className="px-4 py-3"><div className="skeleton h-8 w-full" /></td>
@@ -127,7 +119,7 @@ export default function DealsPage() {
         </div>
       </div>
 
-      {!loading && filtered.length === 0 && (
+      {!isLoading && filtered.length === 0 && (
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] p-12 text-center">
           <TrendingDown size={48} className="mx-auto text-deal/20" />
           <p className="mt-3 text-sm text-[var(--text-muted)]">暂无符合条件的降价信息</p>
@@ -136,4 +128,3 @@ export default function DealsPage() {
     </div>
   );
 }
-

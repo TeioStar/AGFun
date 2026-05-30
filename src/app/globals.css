@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 暗色主题（默认） */
 :root {
   --bg: #0f0f23;
   --bg-card: #1a1a2e;
@@ -15,6 +16,22 @@
   --glow-bilibili: rgba(251, 114, 153, 0.15);
   --glow-steam: rgba(102, 192, 244, 0.15);
   --glow-deal: rgba(16, 185, 129, 0.15);
+}
+
+/* 亮色主题 */
+.light {
+  --bg: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --bilibili: #e44d7a;
+  --steam: #4a9bc7;
+  --deal: #0d9488;
+  --glow-bilibili: rgba(228, 77, 122, 0.1);
+  --glow-steam: rgba(74, 155, 199, 0.1);
+  --glow-deal: rgba(13, 148, 136, 0.1);
 }
 
 * {
