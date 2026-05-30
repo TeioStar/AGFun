@@ -21,6 +21,16 @@ copyDir(
   releaseDir
 );
 
+// 修复 required-server-files.json 中的构建机器路径
+const rsfPath = path.join(releaseDir, '.next', 'required-server-files.json');
+if (fs.existsSync(rsfPath)) {
+  const rsf = JSON.parse(fs.readFileSync(rsfPath, 'utf-8'));
+  // 将构建机器绝对路径替换为当前目录（相对路径）
+  rsf.appDir = '.';
+  fs.writeFileSync(rsfPath, JSON.stringify(rsf));
+  console.log('🔧 已修复 required-server-files.json 路径');
+}
+
 // 复制 static 到正确位置
 copyDir(
   path.join(ROOT, '.next', 'static'),
